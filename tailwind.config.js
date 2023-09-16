@@ -2,7 +2,14 @@
 module.exports = {
   content: ["./src/**/*.{html,js}"],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        gilroylight: ["Gilroy-Light", "sans"],
+        gilroyextrabold: ["Gilroy-ExtraBold", "sans"],
+        montserratitalic: ["Montserrat-Italic", "sans"],
+        montserratregular: ["Montserrat-Regular", "sans"],
+      },
+    },
   },
 
   plugins: [require("daisyui")],
