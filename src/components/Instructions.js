@@ -1,11 +1,11 @@
+import React, { useEffect, useRef, useState } from "react";
 import FullScreenSection from "../containers/FullScreenSection";
 import UnboxingDoodle from "../assets/images/UnboxingDoodle.gif";
 import ReadingDoodle from "../assets/images/ReadingDoodle.gif";
 import DancingDoodle from "../assets/images/DancingDoodle.gif";
 
-import { useEffect, useRef, useState } from "react";
-
 const Instructions = () => {
+  // Define an array of instructions with step, heading, text, image source, and alt text.
   const instructions = [
     {
       step: 1,
@@ -30,37 +30,37 @@ const Instructions = () => {
     },
   ];
 
+  // State variables for tracking the current instruction and completion status.
   const [currentInstruction, setCurrentInstruction] = useState(0);
   const [instructionsComplete, setInstructionsComplete] = useState(false);
-  const headingtRef = useRef(null);
+
+  // References for DOM elements to apply transition effects.
+  const headingRef = useRef(null);
   const descriptionRef = useRef(null);
 
-  const textTransition = {
-    opacityHundred: () => {
-      headingtRef.current.classList.remove("opacity-0");
-      descriptionRef.current.classList.remove("opacity-0");
-    },
-    opacityZero: () => {
-      headingtRef.current.classList.add("opacity-0");
-      descriptionRef.current.classList.add("opacity-0");
-    },
+  // Function to handle opacity transitions for heading and description.
+  const textOpacity = (boolean) => {
+    headingRef.current.classList.toggle("opacity-0", boolean === false);
+    descriptionRef.current.classList.toggle("opacity-0", boolean === false);
   };
 
+  // Effect to initiate a opacity text transition when the component mounts.
   useEffect(() => {
     setTimeout(() => {
-      textTransition.opacityHundred();
+      textOpacity(true);
     }, 100);
   }, []);
 
+  // Function to handle the "Next" button click.
   const handleNext = () => {
-    textTransition.opacityZero();
+    textOpacity(false);
 
     setTimeout(() => {
       if (currentInstruction < 2) {
         setCurrentInstruction(
-          (previousCurrentInstruction) => previousCurrentInstruction + 1
+          (prevCurrentInstruction) => prevCurrentInstruction + 1
         );
-        textTransition.opacityHundred();
+        textOpacity(true);
       } else if (currentInstruction === 2) {
         setInstructionsComplete(true);
         setCurrentInstruction(0);
@@ -71,11 +71,12 @@ const Instructions = () => {
   return (
     <>
       {!instructionsComplete && (
+        // Render the instructions section if it's not completed.
         <FullScreenSection extraClasses="flex flex-col justify-around items-center text-center font-extrabold">
           <div className="">
             <h2
               className="text-primary text-2xl md:text-3xl uppercase opacity-0 transition-opacity duration-150 ease-in-out"
-              ref={headingtRef}
+              ref={headingRef}
             >
               {instructions[currentInstruction].heading}
             </h2>
@@ -92,7 +93,8 @@ const Instructions = () => {
               alt={instructions[currentInstruction].altTxt}
             />
 
-            <div className=" self-start md:self-center mt-6 ml-8 md:ml-0">
+            <div className="self-start md:self-center mt-6 ml-8 md:ml-0">
+              {/* Render buttons for each instruction step. */}
               {instructions.map((instruction, index) => (
                 <button
                   className={
@@ -108,8 +110,9 @@ const Instructions = () => {
             </div>
           </div>
 
+          {/* Render the "Next" or "Finish" button based on the current step. */}
           <button className="btn btn-secondary px-16 my-5" onClick={handleNext}>
-            {currentInstruction == 2 ? "Finish" : "Next"}
+            {currentInstruction === 2 ? "Finish" : "Next"}
           </button>
         </FullScreenSection>
       )}
