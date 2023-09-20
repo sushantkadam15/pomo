@@ -9,7 +9,7 @@ const PomoBrandHeader = ({pomoBrandHeaderDisplay, setPomoBrandHeaderDisplay}) =>
   return (
     <>
       {pomoBrandHeaderDisplay && (
-        <FullScreenSection extraClasses="flex flex-col justify-center items-center">
+        <FullScreenSection extraclasses="flex flex-col justify-center items-center">
           <img src={logo} alt="Pomo Logo" className=" animate-bounce" />
           <h1 className="text-5xl text-center font-gilroylight font-bold ">
             POMO

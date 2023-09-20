@@ -1,7 +1,9 @@
+import React, { useState } from "react";
 import PomoBrandHeader from "../components/PomoBrandHeader";
 import Onboarding from "../components/Onboarding";
 import TimerControlPanel from "../components/TimerControlPanel";
-import { useState } from "react";
+import { PomoStatsProvider } from "../context/PomoStatsContext";
+
 function App() {
   const [pomoBrandHeaderDisplay, setPomoBrandHeaderDisplay] = useState(true);
   const [instructionsComplete, setInstructionsComplete] = useState(false);
@@ -14,19 +16,23 @@ function App() {
           setPomoBrandHeaderDisplay={setPomoBrandHeaderDisplay}
         />
       );
-    } else if(!instructionsComplete && !pomoBrandHeaderDisplay){
-      return(
-        <Onboarding instructionsComplete={instructionsComplete}  setInstructionsComplete={setInstructionsComplete} />
-      )
-    } else {
-      return <div>Nothing to display</div>;
+    } else if (!instructionsComplete && !pomoBrandHeaderDisplay) {
+      return (
+        <Onboarding
+          instructionsComplete={instructionsComplete}
+          setInstructionsComplete={setInstructionsComplete}
+        />
+      );
     }
   };
 
   return (
-    <main className=" font-montserratregular my-0">
-     <TimerControlPanel />
-    </main>
+    <PomoStatsProvider>
+      <main className="font-montserrat-regular my-0">
+        {currentDisplayItem()}
+        <TimerControlPanel />
+      </main>
+    </PomoStatsProvider>
   );
 }
 

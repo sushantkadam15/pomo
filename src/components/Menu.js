@@ -1,12 +1,19 @@
 import menuIcon from "../assets/icons/menu-left.png";
-const Menu = () => {
+const Menu = ({ view }) => {
   return (
     <>
       <nav className="drawer">
         <input id="my-drawer" type="checkbox" className="drawer-toggle" />
         <div className="drawer-content">
           {/* Page content here */}
-          <label htmlFor="my-drawer" className="btn btn-primary drawer-button">
+          <label
+            htmlFor="my-drawer"
+            className={
+              view === "focus"
+                ? "btn btn-primary drawer-button"
+                : "btn btn-secondary drawer-button"
+            }
+          >
             <img src={menuIcon} className="md:h-6" alt="Menu Bar" />
           </label>
         </div>
