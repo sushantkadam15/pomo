@@ -1,8 +1,9 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import playButtonIcon from "../assets/icons/play-button.png";
 import pauseButtonIcon from "../assets/icons/pause-button.png";
 import Menu from "./Menu";
-
+import { PomoContext } from "../context/PomoContext";
+import { Volume, VolumeX } from "lucide-react";
 const CountdownTimer = ({
   displayedTimer,
   pomoStats,
@@ -11,6 +12,7 @@ const CountdownTimer = ({
   timerDuration,
 }) => {
   const { seconds, minutes, isRunning, start, pause, restart } = displayedTimer;
+  const { audioMuted, setAudioMuted } = useContext(PomoContext);
 
   // Handle the restart button click
   const handleRestartClick = () => {
@@ -36,6 +38,18 @@ const CountdownTimer = ({
       {/* Header Section */}
       <div className="w-full pr-4 pt-4 flex justify-between items-center">
         <Menu view={view} />
+
+        {/* Audio Mute Button */}
+        <div className="px-4">
+          <label htmlFor="mute-button">
+            {!audioMuted ? <Volume /> : <VolumeX />}
+          </label>
+          <button
+            className="hidden"
+            id="mute-button"
+            onClick={() => setAudioMuted((prevMuteStatus) => !prevMuteStatus)}
+          ></button>
+        </div>
         {/* Button to restart the timer */}
         <button className="uppercase text-sm" onClick={handleRestartClick}>
           Restart

@@ -1,9 +1,10 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import FullScreenSection from "../containers/FullScreenSection";
 import CountdownTimer from "./CountdownTimer";
 import { useTimer } from "react-timer-hook";
-import { PomoStatsContext } from "../context/PomoStatsContext";
+import { PomoContext } from "../context/PomoContext";
 import GoalCompletionCard from "./GoalCompletionCard";
+import belllSound from "../assets/sounds/bell.wav";
 
 function TimerControlPanel() {
   // State variables for controlling the timer and session data
@@ -14,9 +15,11 @@ function TimerControlPanel() {
   const [currentBreakDuration, setCurrentBreakDuration] =
     useState(shortBreakDuration);
 
-  const { pomoStats, setPomoStats } = useContext(PomoStatsContext);
+  const { pomoStats, setPomoStats, audioMuted } = useContext(PomoContext);
   const [displayGoalCompletionCard, setDisplayGoalCompletionCard] =
     useState(false);
+
+  const bell = new Audio(belllSound);
 
   // Function to calculate expiry timestamp based on timer duration in seconds
   const expiryTimestamp = (timerDurationInSeconds) => {
@@ -40,6 +43,7 @@ function TimerControlPanel() {
 
   // Function to handle the completion of a focus session
   function handleSessionCompletion() {
+    !audioMuted && bell.play();
     const isFocusRound = view === "focus";
     const isShortBreak =
       currentBreakDuration === shortBreakDuration && view === "break";
@@ -62,7 +66,7 @@ function TimerControlPanel() {
       breakTimer.restart(newTime); // Assuming breakTimer exists
     };
 
-    if (isFocusRound) {
+    if (isFocusRound && pomoStats.sessionCompleted < 4) {
       // Increment rounds completed and switch to a break if not the final round
       console.log("isFocusRound");
       if (pomoStats.roundsCompleted === 3 && !isGoalComplete) {
@@ -115,6 +119,7 @@ function TimerControlPanel() {
       console.log("isLongBreak");
       changeViewToFocus();
     }
+
     console.log(`
     ***********************
     roundsCompleted: ${pomoStats.roundsCompleted}

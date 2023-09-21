@@ -1,4 +1,6 @@
 import menuIcon from "../assets/icons/menu-left.png";
+import {Timer, AreaChart, Settings } from 'lucide-react';
+
 const Menu = ({ view }) => {
   return (
     <>
@@ -18,14 +20,18 @@ const Menu = ({ view }) => {
           </label>
         </div>
         <div className="drawer-side z-10">
+          
           <label htmlFor="my-drawer" className="drawer-overlay" />
-          <ul className="menu p-4 w-80 min-h-full bg-base-200 text-base-content">
+          <ul className="menu p-4 w-80 min-h-full bg-base-200 text-base-content text-lg">
             {/* Sidebar content here */}
-            <li>
-              <a>Sidebar Item 1</a>
+            <li className="my-2">
+            <a><Timer />POMO</a>
             </li>
-            <li>
-              <a>Sidebar Item 2</a>
+            <li className="my-2">
+              <a><AreaChart />Stats</a>
+            </li>
+            <li className="my-2">
+              <a><Settings />Settings</a>
             </li>
           </ul>
         </div>

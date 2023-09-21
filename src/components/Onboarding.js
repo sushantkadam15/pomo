@@ -72,7 +72,7 @@ const Instructions = ({ instructionsComplete, setInstructionsComplete }) => {
         // Render the instructions section if it's not completed.
         <FullScreenSection extraclasses="flex flex-col items-center text-center justify-around font-extrabold">
           <button
-            className="btn btn-sm bg-base-100 border-none self-start uppercase ml-2 mt-4"
+            className="btn btn-sm bg-base-100 border-none self-start uppercase ml-2 md:ml-5"
             onClick={() => setInstructionsComplete(true)}
           >
             Skip
