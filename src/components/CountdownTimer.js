@@ -1,9 +1,8 @@
-import React, { useContext, useEffect } from "react";
+import React, { useEffect } from "react";
 import playButtonIcon from "../assets/icons/play-button.png";
 import pauseButtonIcon from "../assets/icons/pause-button.png";
 import Menu from "./Menu";
-import { PomoContext } from "../context/PomoContext";
-import { Volume, VolumeX } from "lucide-react";
+
 const CountdownTimer = ({
   displayedTimer,
   pomoStats,
@@ -12,13 +11,6 @@ const CountdownTimer = ({
   timerDuration,
 }) => {
   const { seconds, minutes, isRunning, start, pause, restart } = displayedTimer;
-  const { audioMuted, setAudioMuted } = useContext(PomoContext);
-
-  // Handle the restart button click
-  const handleRestartClick = () => {
-    const newTime = expiryTimestamp(timerDuration);
-    restart(newTime);
-  };
 
   // Define the message based on the timer state and view
   const message =
@@ -28,6 +20,11 @@ const CountdownTimer = ({
       ? "Short Break Started"
       : null;
 
+  const menuclass =
+    view === "focus"
+      ? "btn btn-primary drawer-button"
+      : "btn btn-secondary drawer-button";
+
   // Pause the timer when the view changes (e.g., from focus to break) because react-timer-hook does not have a reset option but restart that runs automatcally
   useEffect(() => {
     pause();
@@ -36,25 +33,12 @@ const CountdownTimer = ({
   return (
     <>
       {/* Header Section */}
-      <div className="w-full pr-4 pt-4 flex justify-between items-center">
-        <Menu view={view} />
-
-        {/* Audio Mute Button */}
-        <div className="px-4">
-          <label htmlFor="mute-button">
-            {!audioMuted ? <Volume /> : <VolumeX />}
-          </label>
-          <button
-            className="hidden"
-            id="mute-button"
-            onClick={() => setAudioMuted((prevMuteStatus) => !prevMuteStatus)}
-          ></button>
-        </div>
-        {/* Button to restart the timer */}
-        <button className="uppercase text-sm" onClick={handleRestartClick}>
-          Restart
-        </button>
-      </div>
+      <Menu
+        menuclass={menuclass}
+        expiryTimestamp={expiryTimestamp}
+        timerDuration={timerDuration}
+        restart={restart}
+      />
 
       <div className="flex flex-col justify-center items-center">
         {/* Timer Display */}

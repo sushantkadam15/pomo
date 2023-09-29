@@ -3,6 +3,9 @@ import PomoBrandHeader from "../components/PomoBrandHeader";
 import Onboarding from "../components/Onboarding";
 import TimerControlPanel from "../components/TimerControlPanel";
 import { PomoProvider } from "../context/PomoContext";
+import { Route, Routes } from "react-router-dom";
+import PomoStats from "../components/PomoStats";
+import Settings from "../components/Settings";
 
 function App() {
   const [pomoBrandHeaderDisplay, setPomoBrandHeaderDisplay] = useState(true);
@@ -34,11 +37,17 @@ function App() {
     }
   };
 
+  const Home = () => (
+    <main className="font-montserrat-regular my-0">{currentDisplayItem()}</main>
+  );
+
   return (
     <PomoProvider>
-      <main className="font-montserrat-regular my-0">
-        {currentDisplayItem()}
-      </main>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/pomostats" element={<PomoStats />} />
+        <Route path="/settings" element={<Settings />} />
+      </Routes>
     </PomoProvider>
   );
 }

@@ -4,22 +4,21 @@ import CountdownTimer from "./CountdownTimer";
 import { useTimer } from "react-timer-hook";
 import { PomoContext } from "../context/PomoContext";
 import GoalCompletionCard from "./GoalCompletionCard";
-import belllSound from "../assets/sounds/bell.wav";
+import bellSound from "../assets/sounds/bell.wav";
+
+const bell = new Audio(bellSound);
 
 function TimerControlPanel() {
   // State variables for controlling the timer and session data
+  const { pomoStats, setPomoStats, settings, pomoStatsStateless } =
+    useContext(PomoContext); // Removed unnecessary pomoStatsStateless
   const [view, setView] = useState("focus");
-  const [pomoDuration, setPomoDuration] = useState(2); // Default Pomodoro duration set to 25 minutes
-  const [shortBreakDuration, setShortBreakDuration] = useState(3); // Default short break duration set to 5 minutes
-  const [longBreakDuration, setLongBreakDuration] = useState(4); // Default long break duration set to 15 minutes
-  const [currentBreakDuration, setCurrentBreakDuration] =
-    useState(shortBreakDuration);
+  const [currentBreakDuration, setCurrentBreakDuration] = useState(
+    settings.shortBreakDuration
+  );
 
-  const { pomoStats, setPomoStats, audioMuted } = useContext(PomoContext);
   const [displayGoalCompletionCard, setDisplayGoalCompletionCard] =
     useState(false);
-
-  const bell = new Audio(belllSound);
 
   // Function to calculate expiry timestamp based on timer duration in seconds
   const expiryTimestamp = (timerDurationInSeconds) => {
@@ -28,115 +27,84 @@ function TimerControlPanel() {
     return time;
   };
 
+  const sessionCompletionHandler = () => {
+    !settings.audioMuted && bell.play();
+    const updatePomoStats = (update) => {
+      // Merges both objects
+      Object.assign(pomoStatsStateless, update);
+      setPomoStats({
+        ...pomoStats,
+        ...update,
+      });
+    };
+
+    // Updated variable names here to use pomoStats from the context
+    const endPomoRound = () => {
+      updatePomoStats({
+        roundsCompleted: pomoStatsStateless.roundsCompleted + 1,
+      });
+
+      setView("break");
+    };
+
+    const endShortBreak = () => {
+      updatePomoStats({
+        shortBreaksCompleted: pomoStatsStateless.shortBreaksCompleted + 1,
+      });
+
+      setView("focus");
+    };
+
+    const endLongBreak = () => {
+      updatePomoStats({
+        longBreaksCompleted: pomoStatsStateless.longBreaksCompleted + 1,
+      });
+
+      setView("focus");
+    };
+
+    const endPomoSession = () => {
+      updatePomoStats({
+        roundsCompleted: pomoStatsStateless.roundsCompleted + 1,
+        sessionCompleted: pomoStatsStateless.sessionCompleted + 1,
+      });
+    };
+
+    if (view === "focus") {
+      endPomoRound();
+    }
+    if (view === "break") {
+      endShortBreak();
+    }
+
+    console.log(`
+      ***********************
+      roundsCompleted: ${pomoStats.roundsCompleted}
+      targetRounds: ${pomoStats.targetRounds}
+      sessionCompleted: ${pomoStats.sessionCompleted}
+      targetSession: ${pomoStats.targetSession}
+      shortBreaksCompleted: ${pomoStats.shortBreaksCompleted}
+      longBreaksCompleted: ${pomoStats.longBreaksCompleted}
+      totalRoundsCompletedAllTime: ${pomoStats.totalRoundsCompletedAllTime}
+      totalSessionsCompletedAllTime: ${pomoStats.totalSessionsCompletedAllTime}
+      totalShortBreaksCompletedAllTime: ${pomoStats.totalShortBreaksCompletedAllTime}
+      totalLongBreaksCompletedAllTime: ${pomoStats.totalLongBreaksCompletedAllTime}
+      totalGoalsAchieved: ${pomoStats.totalGoalsAchieved}
+    `);
+  };
+
   // Create session and break timers using custom hook
   const sessionTimer = useTimer({
-    expiryTimestamp: expiryTimestamp(pomoDuration),
-    onExpire: handleSessionCompletion,
-    autoStart: false, // Timer doesn't start automatically.
+    expiryTimestamp: expiryTimestamp(settings.pomoSessionDuration),
+    onExpire: sessionCompletionHandler,
+    autoStart: false,
   });
 
   const breakTimer = useTimer({
     expiryTimestamp: expiryTimestamp(currentBreakDuration),
-    onExpire: handleSessionCompletion,
-    autoStart: false, // Timer doesn't start automatically.
+    onExpire: sessionCompletionHandler,
+    autoStart: false,
   });
-
-  // Function to handle the completion of a focus session
-  function handleSessionCompletion() {
-    !audioMuted && bell.play();
-    const isFocusRound = view === "focus";
-    const isShortBreak =
-      currentBreakDuration === shortBreakDuration && view === "break";
-    const isLongBreak =
-      currentBreakDuration === longBreakDuration && view === "break";
-    const isGoalComplete =
-      pomoStats.sessionCompleted === pomoStats.targetSession - 1 &&
-      pomoStats.roundsCompleted === pomoStats.targetRounds - 1;
-
-    const changeViewToFocus = () => {
-      setView("focus");
-      const newTime = expiryTimestamp(pomoDuration); // Assuming expiryTimestamp exists
-      sessionTimer.restart(newTime); // Assuming sessionTimer exists
-    };
-
-    const changeViewToBreak = (breakDuration) => {
-      setCurrentBreakDuration(breakDuration);
-      setView("break");
-      const newTime = expiryTimestamp(breakDuration); // Assuming expiryTimestamp exists
-      breakTimer.restart(newTime); // Assuming breakTimer exists
-    };
-
-    if (isFocusRound && pomoStats.sessionCompleted < 4) {
-      // Increment rounds completed and switch to a break if not the final round
-      console.log("isFocusRound");
-      if (pomoStats.roundsCompleted === 3 && !isGoalComplete) {
-        setPomoStats((prevPomo) => ({
-          ...prevPomo,
-          roundsCompleted: prevPomo.roundsCompleted + 1,
-          sessionCompleted: prevPomo.sessionCompleted + 1,
-          totalSessionsCompletedAllTime:
-            prevPomo.totalSessionsCompletedAllTime + 1,
-          totalRoundsCompletedAllTime: prevPomo.totalRoundsCompletedAllTime + 1,
-        }));
-        changeViewToBreak(longBreakDuration);
-      } else if (!isGoalComplete && pomoStats.roundsCompleted !== 3) {
-        setPomoStats((prevPomo) => ({
-          ...prevPomo,
-          roundsCompleted: prevPomo.roundsCompleted + 1,
-          totalRoundsCompletedAllTime: prevPomo.totalRoundsCompletedAllTime + 1,
-        }));
-        changeViewToBreak(shortBreakDuration);
-      } else if (isGoalComplete) {
-        setDisplayGoalCompletionCard(true);
-        setPomoStats((prevPomo) => ({
-          ...prevPomo,
-          totalGoalsAchieved: prevPomo.totalGoalsAchieved + 1,
-          totalRoundsCompletedAllTime: prevPomo.totalRoundsCompletedAllTime + 1,
-          totalSessionsCompletedAllTime:
-            prevPomo.totalSessionsCompletedAllTime + 1,
-          roundsCompleted: 0,
-          sessionCompleted: 0,
-        }));
-        changeViewToFocus();
-      }
-    } else if (isShortBreak) {
-      setPomoStats((prevPomo) => ({
-        ...prevPomo,
-        shortBreaksCompleted: prevPomo.shortBreaksCompleted + 1,
-        totalShortBreaksCompletedAllTime:
-          prevPomo.totalShortBreaksCompletedAllTime + 1,
-      }));
-      console.log("isShortBreak");
-      changeViewToFocus();
-    } else if (isLongBreak) {
-      setPomoStats((prevPomo) => ({
-        ...prevPomo,
-        roundsCompleted: 0,
-        longBreaksCompleted: prevPomo.longBreaksCompleted + 1,
-        totalLongBreaksCompletedAllTime:
-          prevPomo.totalLongBreaksCompletedAllTime + 1,
-      }));
-      console.log("isLongBreak");
-      changeViewToFocus();
-    }
-
-    console.log(`
-    ***********************
-    roundsCompleted: ${pomoStats.roundsCompleted}
-    targetRounds: ${pomoStats.targetRounds}
-    sessionCompleted: ${pomoStats.sessionCompleted}
-    targetSession: ${pomoStats.targetSession}
-    shortBreaksCompleted: ${pomoStats.shortBreaksCompleted}
-    longBreaksCompleted: ${pomoStats.longBreaksCompleted}
-    totalRoundsCompletedAllTime: ${pomoStats.totalRoundsCompletedAllTime}
-    totalSessionsCompletedAllTime: ${pomoStats.totalSessionsCompletedAllTime}
-    totalShortBreaksCompletedAllTime: ${pomoStats.totalShortBreaksCompletedAllTime}
-    totalLongBreaksCompletedAllTime: ${pomoStats.totalLongBreaksCompletedAllTime}
-    totalGoalsAchieved: ${pomoStats.totalGoalsAchieved}
-    
-    
-    `);
-  }
 
   // Render the TimerControlPanel component
   return (
@@ -153,7 +121,7 @@ function TimerControlPanel() {
           pomoStats={pomoStats}
           view={view}
           expiryTimestamp={expiryTimestamp}
-          timerDuration={pomoDuration}
+          timerDuration={settings.pomoSessionDuration}
         />
       )}
 
@@ -168,7 +136,7 @@ function TimerControlPanel() {
       )}
       <GoalCompletionCard
         displayGoalCompletionCard={displayGoalCompletionCard}
-        setDisplayGoalCompletionCard={setCurrentBreakDuration}
+        setDisplayGoalCompletionCard={setDisplayGoalCompletionCard}
       />
     </FullScreenSection>
   );
