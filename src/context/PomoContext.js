@@ -4,7 +4,7 @@ import React, { createContext, useEffect, useState } from "react";
 const defaultPomoStats = {
   roundsCompleted: 0,
   targetRounds: 4,
-  sessionCompleted: 3,
+  sessionCompleted: 0,
   targetSession: 4,
   shortBreaksCompleted: 0,
   longBreaksCompleted: 0,
