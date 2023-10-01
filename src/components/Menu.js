@@ -1,5 +1,5 @@
 import menuIcon from "../assets/icons/menu-left.png";
-import { Timer, AreaChart, Settings } from "lucide-react";
+import { Timer, AreaChart } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Volume, VolumeX, RotateCcw } from "lucide-react";
 import { useContext } from "react";
@@ -36,15 +36,9 @@ const Menu = ({ menuclass, expiryTimestamp, timerDuration, restart }) => {
               </Link>
             </li>
             <li className="my-2">
-              <Link to="/pomostats">
-                <AreaChart />
-                Stats
-              </Link>
-            </li>
-            <li className="my-2">
               <Link to="/settings">
-                <Settings />
-                Settings
+                <AreaChart />
+                Insights & Preferences
               </Link>
             </li>
           </ul>

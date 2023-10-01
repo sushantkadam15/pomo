@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import PomoBrandHeader from "../components/PomoBrandHeader";
 import Onboarding from "../components/Onboarding";
-import TimerControlPanel from "../components/TimerControlPanel";
+import TimerControlPanel from "./TimerControlPanel";
 import { PomoProvider } from "../context/PomoContext";
 import { Route, Routes } from "react-router-dom";
 import PomoStats from "../components/PomoStats";
-import Settings from "../components/Settings";
+import InsightsAndPreferences from "./InsightsAndPreferences";
 
 function App() {
   const [pomoBrandHeaderDisplay, setPomoBrandHeaderDisplay] = useState(true);
@@ -46,7 +46,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/pomostats" element={<PomoStats />} />
-        <Route path="/settings" element={<Settings />} />
+        <Route path="/settings" element={<InsightsAndPreferences />} />
       </Routes>
     </PomoProvider>
   );

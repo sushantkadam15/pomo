@@ -1,4 +1,3 @@
-import { useState } from "react";
 import logo from "../assets/pomodoro-clock.gif";
 import FullScreenSection from "../containers/FullScreenSection";
 const PomoBrandHeader = ({pomoBrandHeaderDisplay, setPomoBrandHeaderDisplay}) => {

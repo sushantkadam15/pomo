@@ -1,11 +1,39 @@
-import FullScreenSection from "../containers/FullScreenSection";
-import { Link } from "react-router-dom";
-import close from "../assets/icons/close.png";
-import timerImg from "../assets/icons/CompositeLayer.png";
 import { PomoContext } from "../context/PomoContext";
 import { useContext } from "react";
+import { GaugeCircle, Play, Pause, StopCircle, Rocket } from "lucide-react";
+import convertSeconds from "convert-seconds";
+
+const StatsCard = ({
+  // Define it as a functional component with props
+  statsDescription,
+  statsIcon,
+  stats,
+  statsCalculationParam,
+}) => {
+  // Check if stats and statsCalculationParam are valid numbers
+  if (typeof stats !== "number" || typeof statsCalculationParam !== "number") {
+    console.error(
+      "Invalid value sent to convert-seconds:",
+      stats, // undefined
+      statsCalculationParam // undefined
+    );
+    return null; // Return null or handle the error appropriately
+  }
+
+  return (
+    <div className="stat">
+      <div className="stat-figure text-secondary">{statsIcon}</div>
+      <div className="stat-title">{statsDescription}</div>
+      <div className="stat-value">{stats}</div>
+      <div className="stat-desc">
+        {convertSeconds(stats * statsCalculationParam).minutes} mins
+      </div>
+    </div>
+  );
+};
+
 const PomoStats = () => {
-  const { pomoStats } = useContext(PomoContext);
+  const { pomoStats, settings } = useContext(PomoContext);
   const {
     totalRoundsCompletedAllTime,
     totalSessionsCompletedAllTime,
@@ -13,52 +41,47 @@ const PomoStats = () => {
     totalLongBreaksCompletedAllTime,
     totalGoalsAchieved,
   } = pomoStats;
-
-  const Card = ({ stats, description }) => {
-    return (
-      <div className="card  max-w-fit">
-        <div className="card-body">
-          <h2 className=" text-center text-4xl">{stats}</h2>
-          <p className=" text-center text-sm">{description}</p>
-        </div>
-      </div>
-    );
-  };
   return (
-    <FullScreenSection
-      extraclasses={"flex justify-center items-center bg-secondary"}
-    >
-      <Link to="/">
-        <img src={close} alt="close button" className="absolute top-5 left-5" />
-      </Link>
-      <div className="mt-4 md:mt-0  shadow-2xl shadow-primary p-10 rounded-3xl bg-base-100">
-        <div className="flex justify-center md:mb-5">
-          <img src={timerImg} alt="Timer Header" />
-        </div>
-        <div className=" flex flex-wrap max-w-screen-sm justify-evenly">
-          <Card
+    <div className="mt-10">
+      <div className="flex flex-wrap">
+        <div className="stats shadow m-5 w-full">
+          <StatsCard
+            statsDescription="Rounds"
+            statsIcon={<Play size={36} />}
             stats={totalRoundsCompletedAllTime}
-            description="Rounds Completed"
+            statsCalculationParam={settings.pomoSessionDuration}
           />
-          <Card
-            stats={totalSessionsCompletedAllTime}
-            description="Sessions Completed"
-          />
-
-          <Card
+          <StatsCard
+            statsDescription="Short Breaks"
+            statsIcon={<Pause size={36} />}
             stats={totalShortBreaksCompletedAllTime}
-            description="Short Breaks Completed"
+            statsCalculationParam={settings.shortBreakDuration}
           />
-
-          <Card
+        </div>
+        <div className="stats shadow m-5 w-full">
+          <StatsCard
+            statsDescription="Long Breaks"
+            statsIcon={<StopCircle size={36} />}
             stats={totalLongBreaksCompletedAllTime}
-            description="Long Breaks Completed"
+            statsCalculationParam={settings.longBreakDuration}
           />
-
-          <Card stats={totalGoalsAchieved} description="Goals Completed" />
+          <StatsCard
+            statsDescription="Sessions"
+            statsIcon={<GaugeCircle size={36} />}
+            stats={totalSessionsCompletedAllTime}
+            statsCalculationParam={settings.pomoSessionDuration}
+          />
+        </div>
+        <div className="stats shadow m-5 w-full">
+          <StatsCard
+            statsDescription="Goal"
+            statsIcon={<Rocket size={36} />}
+            stats={totalGoalsAchieved}
+            statsCalculationParam={settings.pomoSessionDuration}
+          />
         </div>
       </div>
-    </FullScreenSection>
+    </div>
   );
 };
 

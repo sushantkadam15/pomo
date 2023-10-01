@@ -1,17 +1,17 @@
-import React, { useContext, useEffect, useState } from "react";
-import FullScreenSection from "../containers/FullScreenSection";
-import CountdownTimer from "./CountdownTimer";
+import React, { useContext, useState } from "react";
+import FullScreenSection from "./FullScreenSection";
+import CountdownTimer from "../components/CountdownTimer";
 import { useTimer } from "react-timer-hook";
 import { PomoContext } from "../context/PomoContext";
-import GoalCompletionCard from "./GoalCompletionCard";
+import GoalCompletionCard from "../components/GoalCompletionCard";
 import bellSound from "../assets/sounds/bell.wav";
 
 const bell = new Audio(bellSound);
 
 function TimerControlPanel() {
   // State variables for controlling the timer and session data
-  const { pomoStats, setPomoStats, settings, pomoStatsStateless } =
-    useContext(PomoContext); // Removed unnecessary pomoStatsStateless
+  const { pomoStats, setPomoStats, settings } = useContext(PomoContext); // Removed unnecessary pomoStatsStateless
+
   const [view, setView] = useState("focus");
   const [currentBreakDuration, setCurrentBreakDuration] = useState(
     settings.shortBreakDuration
@@ -48,43 +48,55 @@ function TimerControlPanel() {
       const newTime = expiryTimestamp(newDuration);
       timer.restart(newTime);
     };
-  
+
     // Function to update pomoStats and handle view changes
     const handleViewChange = (newView, newDuration, statsUpdate) => {
       setPomoStats((prevPomo) => ({
         ...prevPomo,
         ...statsUpdate,
       }));
-      changeViewAndRestartTimer(newView, newDuration, newView === "focus" ? sessionTimer : breakTimer);
+      changeViewAndRestartTimer(
+        newView,
+        newDuration,
+        newView === "focus" ? sessionTimer : breakTimer
+      );
     };
-  
+
     const isFocusRound = view === "focus";
-    const isShortBreak = currentBreakDuration === settings.shortBreakDuration && view === "break";
-    const isLongBreak = currentBreakDuration === settings.longBreakDuration && view === "break";
+    const isShortBreak =
+      currentBreakDuration === settings.shortBreakDuration && view === "break";
+    const isLongBreak =
+      currentBreakDuration === settings.longBreakDuration && view === "break";
     const isGoalComplete =
       pomoStats.sessionCompleted === pomoStats.targetSession - 1 &&
       pomoStats.roundsCompleted === pomoStats.targetRounds - 1;
-  
+      !settings.audioMuted && bell.play();
+
     if (isFocusRound && pomoStats.sessionCompleted < 4) {
       // Increment rounds completed and switch to a break if not the final round
       if (pomoStats.roundsCompleted === 3 && !isGoalComplete) {
         handleViewChange("break", settings.longBreakDuration, {
           roundsCompleted: pomoStats.roundsCompleted + 1,
           sessionCompleted: pomoStats.sessionCompleted + 1,
-          totalSessionsCompletedAllTime: pomoStats.totalSessionsCompletedAllTime + 1,
-          totalRoundsCompletedAllTime: pomoStats.totalRoundsCompletedAllTime + 1,
+          totalSessionsCompletedAllTime:
+            pomoStats.totalSessionsCompletedAllTime + 1,
+          totalRoundsCompletedAllTime:
+            pomoStats.totalRoundsCompletedAllTime + 1,
         });
       } else if (!isGoalComplete && pomoStats.roundsCompleted !== 3) {
         handleViewChange("break", settings.shortBreakDuration, {
           roundsCompleted: pomoStats.roundsCompleted + 1,
-          totalRoundsCompletedAllTime: pomoStats.totalRoundsCompletedAllTime + 1,
+          totalRoundsCompletedAllTime:
+            pomoStats.totalRoundsCompletedAllTime + 1,
         });
       } else if (isGoalComplete) {
         setDisplayGoalCompletionCard(true);
         handleViewChange("focus", settings.pomoSessionDuration, {
           totalGoalsAchieved: pomoStats.totalGoalsAchieved + 1,
-          totalRoundsCompletedAllTime: pomoStats.totalRoundsCompletedAllTime + 1,
-          totalSessionsCompletedAllTime: pomoStats.totalSessionsCompletedAllTime + 1,
+          totalRoundsCompletedAllTime:
+            pomoStats.totalRoundsCompletedAllTime + 1,
+          totalSessionsCompletedAllTime:
+            pomoStats.totalSessionsCompletedAllTime + 1,
           roundsCompleted: 0,
           sessionCompleted: 0,
         });
@@ -92,16 +104,18 @@ function TimerControlPanel() {
     } else if (isShortBreak) {
       handleViewChange("focus", settings.pomoSessionDuration, {
         shortBreaksCompleted: pomoStats.shortBreaksCompleted + 1,
-        totalShortBreaksCompletedAllTime: pomoStats.totalShortBreaksCompletedAllTime + 1,
+        totalShortBreaksCompletedAllTime:
+          pomoStats.totalShortBreaksCompletedAllTime + 1,
       });
     } else if (isLongBreak) {
       handleViewChange("focus", settings.pomoSessionDuration, {
         roundsCompleted: 0,
         longBreaksCompleted: pomoStats.longBreaksCompleted + 1,
-        totalLongBreaksCompletedAllTime: pomoStats.totalLongBreaksCompletedAllTime + 1,
+        totalLongBreaksCompletedAllTime:
+          pomoStats.totalLongBreaksCompletedAllTime + 1,
       });
     }
-  
+
     console.log(`
     ***********************
     roundsCompleted: ${pomoStats.roundsCompleted}
@@ -118,7 +132,6 @@ function TimerControlPanel() {
     
     `);
   }
-  
 
   // Render the TimerControlPanel component
   return (

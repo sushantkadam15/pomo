@@ -28,7 +28,7 @@ const CountdownTimer = ({
   // Pause the timer when the view changes (e.g., from focus to break) because react-timer-hook does not have a reset option but restart that runs automatcally
   useEffect(() => {
     pause();
-  }, [view]);
+  }, [view, pause]);
 
   return (
     <>

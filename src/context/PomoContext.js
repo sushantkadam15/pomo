@@ -17,9 +17,9 @@ const defaultPomoStats = {
 
 const defaultSettings = {
   audioMuted: false,
-  pomoSessionDuration: 4, // seconds
-  shortBreakDuration: 5, // seconds
-  longBreakDuration: 10, // seconds
+  pomoSessionDuration: 5, // seconds
+  shortBreakDuration: 600, // seconds
+  longBreakDuration: 600, // seconds
 };
 
 // Load pomoStats from local storage or set default values
