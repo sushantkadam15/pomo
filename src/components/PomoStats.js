@@ -77,12 +77,18 @@ const PomoStats = () => {
             statsDescription="Goal"
             statsIcon={<Rocket size={36} />}
             stats={totalGoalsAchieved}
-            statsCalculationParam={settings.pomoSessionDuration}
+            statsCalculationParam={
+              totalRoundsCompletedAllTime * settings.pomoSessionDuration +
+              totalShortBreaksCompletedAllTime * settings.shortBreakDuration +
+              totalLongBreaksCompletedAllTime * settings.longBreakDuration
+            }
           />
         </div>
       </div>
     </div>
   );
 };
+
+export { StatsCard };
 
 export default PomoStats;

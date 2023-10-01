@@ -6,17 +6,18 @@ import { PomoContext } from "../context/PomoContext";
 import GoalCompletionCard from "../components/GoalCompletionCard";
 import bellSound from "../assets/sounds/bell.wav";
 
-const bell = new Audio(bellSound);
 
 function TimerControlPanel() {
   // State variables for controlling the timer and session data
-  const { pomoStats, setPomoStats, settings } = useContext(PomoContext); // Removed unnecessary pomoStatsStateless
+  const { pomoStats, setPomoStats, settings } = useContext(PomoContext);
+  const bell = new Audio(bellSound);
 
+
+  // State for managing the view, break duration, and goal completion card display
   const [view, setView] = useState("focus");
   const [currentBreakDuration, setCurrentBreakDuration] = useState(
     settings.shortBreakDuration
   );
-
   const [displayGoalCompletionCard, setDisplayGoalCompletionCard] =
     useState(false);
 
@@ -41,6 +42,7 @@ function TimerControlPanel() {
   });
 
   function handleSessionCompletion() {
+    !settings.audioMuted && bell.play();
     // Function to change the view and restart the timer
     const changeViewAndRestartTimer = (newView, newDuration, timer) => {
       setCurrentBreakDuration(newDuration);
@@ -70,7 +72,6 @@ function TimerControlPanel() {
     const isGoalComplete =
       pomoStats.sessionCompleted === pomoStats.targetSession - 1 &&
       pomoStats.roundsCompleted === pomoStats.targetRounds - 1;
-      !settings.audioMuted && bell.play();
 
     if (isFocusRound && pomoStats.sessionCompleted < 4) {
       // Increment rounds completed and switch to a break if not the final round
@@ -99,6 +100,8 @@ function TimerControlPanel() {
             pomoStats.totalSessionsCompletedAllTime + 1,
           roundsCompleted: 0,
           sessionCompleted: 0,
+          longBreaksCompleted: 0,
+          shortBreaksCompleted: 0,
         });
       }
     } else if (isShortBreak) {
@@ -114,14 +117,20 @@ function TimerControlPanel() {
         totalLongBreaksCompletedAllTime:
           pomoStats.totalLongBreaksCompletedAllTime + 1,
       });
+    } else if (settings.roundsCompleted > 4) {
+      handleViewChange("focus", settings.pomoSessionDuration, {
+        sessionCompleted: 0,
+        shortBreaksCompleted: 0,
+        roundsCompleted: 0,
+        longBreaksCompleted: 0,
+      });
     }
 
+    // Log session stats for debugging
     console.log(`
     ***********************
     roundsCompleted: ${pomoStats.roundsCompleted}
-    targetRounds: ${pomoStats.targetRounds}
     sessionCompleted: ${pomoStats.sessionCompleted}
-    targetSession: ${pomoStats.targetSession}
     shortBreaksCompleted: ${pomoStats.shortBreaksCompleted}
     longBreaksCompleted: ${pomoStats.longBreaksCompleted}
     totalRoundsCompletedAllTime: ${pomoStats.totalRoundsCompletedAllTime}
@@ -129,7 +138,6 @@ function TimerControlPanel() {
     totalShortBreaksCompletedAllTime: ${pomoStats.totalShortBreaksCompletedAllTime}
     totalLongBreaksCompletedAllTime: ${pomoStats.totalLongBreaksCompletedAllTime}
     totalGoalsAchieved: ${pomoStats.totalGoalsAchieved}
-    
     `);
   }
 

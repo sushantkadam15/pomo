@@ -4,7 +4,7 @@ import React, { createContext, useEffect, useState } from "react";
 const defaultPomoStats = {
   roundsCompleted: 0,
   targetRounds: 4,
-  sessionCompleted: 0,
+  sessionCompleted: 3,
   targetSession: 4,
   shortBreaksCompleted: 0,
   longBreaksCompleted: 0,
@@ -17,9 +17,9 @@ const defaultPomoStats = {
 
 const defaultSettings = {
   audioMuted: false,
-  pomoSessionDuration: 5, // seconds
-  shortBreakDuration: 600, // seconds
-  longBreakDuration: 600, // seconds
+  pomoSessionDuration: 1500, // seconds
+  shortBreakDuration: 300, // seconds
+  longBreakDuration: 900, // seconds
 };
 
 // Load pomoStats from local storage or set default values
