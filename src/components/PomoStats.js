@@ -4,20 +4,21 @@ import { GaugeCircle, Play, Pause, StopCircle, Rocket } from "lucide-react";
 import convertSeconds from "convert-seconds";
 
 const StatsCard = ({
-  // Define it as a functional component with props
+  // This is a functional component with props
   statsDescription,
   statsIcon,
   stats,
   statsCalculationParam,
 }) => {
-  // Check if stats and statsCalculationParam are valid numbers
+  // Checking if stats and statsCalculationParam are valid numbers
   if (typeof stats !== "number" || typeof statsCalculationParam !== "number") {
     console.error(
       "Invalid value sent to convert-seconds:",
-      stats, // undefined
-      statsCalculationParam // undefined
+      stats, // replace with actual value or variable
+      statsCalculationParam // replace with actual value or variable
     );
-    return null; // Return null or handle the error appropriately
+    // Returning null and logging the error to console
+    return null;
   }
 
   return (
