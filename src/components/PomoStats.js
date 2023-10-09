@@ -4,20 +4,17 @@ import { GaugeCircle, Play, Pause, StopCircle, Rocket } from "lucide-react";
 import convertSeconds from "convert-seconds";
 
 const StatsCard = ({
-  // This is a functional component with props
   statsDescription,
   statsIcon,
   stats,
   statsCalculationParam,
 }) => {
-  // Checking if stats and statsCalculationParam are valid numbers
   if (typeof stats !== "number" || typeof statsCalculationParam !== "number") {
     console.error(
       "Invalid value sent to convert-seconds:",
-      stats, // replace with actual value or variable
-      statsCalculationParam // replace with actual value or variable
+      stats,
+      statsCalculationParam
     );
-    // Returning null and logging the error to console
     return null;
   }
 
@@ -61,12 +58,13 @@ const PomoStats = () => {
         </div>
         <div className="stats shadow m-5 w-full">
           <StatsCard
-            statsDescription="Long Breaks"
-            statsIcon={<StopCircle size={36} />}
-            stats={totalLongBreaksCompletedAllTime}
-            statsCalculationParam={settings.longBreakDuration}
-          />
-          <StatsCard
+            <StatsCard
+              statsDescription="Long Breaks"
+              statsIcon={<StopCircle size={36} />}
+              stats={totalLongBreaksCompletedAllTime}
+              statsCalculationParam={settings.longBreakDuration}
+            />
+            <StatsCard
             statsDescription="Sessions"
             statsIcon={<GaugeCircle size={36} />}
             stats={totalSessionsCompletedAllTime}
