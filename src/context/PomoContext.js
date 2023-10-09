@@ -29,12 +29,17 @@ const pomoStatsStateless = { ...defaultPomoStats, ...cachedPomoStats };
 const PomoContext = createContext();
 
 const PomoProvider = ({ children }) => {
-  // Use state to manage pomoStats and settings
+  // Use state to manage pomoStats, settings, and statsData
   const [pomoStats, setPomoStats] = useState(pomoStatsStateless);
   const [settings, setSettings] = useState(() => {
     const cachedSettings =
       JSON.parse(localStorage.getItem("pomoSettings")) || {};
     return { ...defaultSettings, ...cachedSettings };
+  });
+  const [statsData, setStatsData] = useState(() => {
+    const cachedStatsData =
+      JSON.parse(localStorage.getItem("statsData")) || [];
+    return cachedStatsData;
   });
 
   // Save pomoStats to local storage whenever it changes
@@ -46,6 +51,11 @@ const PomoProvider = ({ children }) => {
   useEffect(() => {
     localStorage.setItem("pomoSettings", JSON.stringify(settings));
   }, [settings]);
+
+  // Save statsData to local storage whenever it changes
+  useEffect(() => {
+    localStorage.setItem("statsData", JSON.stringify(statsData));
+  }, [statsData]);
 
   const contextValue = {
     pomoStats,
