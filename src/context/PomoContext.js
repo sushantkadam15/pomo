@@ -45,6 +45,8 @@ const PomoProvider = ({ children }) => {
   // Save pomoStats to local storage whenever it changes
   useEffect(() => {
     localStorage.setItem("pomoStats", JSON.stringify(pomoStats));
+    // Update statsData with new stats and current timestamp
+    setStatsData([...statsData, { ...pomoStats, timestamp: Date.now() }]);
   }, [pomoStats]);
 
   // Save settings to local storage whenever they change
