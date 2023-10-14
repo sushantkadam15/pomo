@@ -12,7 +12,7 @@ import FullScreenSection from "../containers/FullScreenSection";
 const PomoBrandHeader = ({ pomoBrandHeaderDisplay, setPomoBrandHeaderDisplay }) => {
   setTimeout(() => {
     setPomoBrandHeaderDisplay(false);
-  }, 2550);
+  }, 1000);
 
   return (
     <>
