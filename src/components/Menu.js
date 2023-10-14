@@ -5,6 +5,16 @@ import { Volume, VolumeX, RotateCcw } from "lucide-react";
 import { useContext } from "react";
 import { PomoContext } from "../context/PomoContext";
 
+/**
+ * Renders a navigation menu with a drawer, menu items, audio mute button, and restart button.
+ * Handles user interactions such as clicking on the menu items and buttons.
+ *
+ * @param {string} menuclass - The CSS class for the menu.
+ * @param {function} expiryTimestamp - A function that calculates the expiry timestamp.
+ * @param {number} timerDuration - The duration of the timer.
+ * @param {function} restart - A function to restart the timer.
+ * @returns {JSX.Element} The rendered navigation menu.
+ */
 const Menu = ({ menuclass, expiryTimestamp, timerDuration, restart }) => {
   const { settings, setSettings } = useContext(PomoContext);
 
