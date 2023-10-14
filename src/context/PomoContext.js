@@ -1,3 +1,10 @@
+/**
+ * Creates a context and provider for managing Pomodoro statistics and settings.
+ * @module PomoProvider
+ * @exports PomoProvider
+ * @exports PomoContext
+ */
+
 import React, { createContext, useEffect, useState } from "react";
 
 // Define default values for pomoStats and settings
@@ -26,8 +33,23 @@ const defaultSettings = {
 const cachedPomoStats = JSON.parse(localStorage.getItem("pomoStats")) || {};
 const pomoStatsStateless = { ...defaultPomoStats, ...cachedPomoStats };
 
+/**
+ * Context for managing Pomodoro statistics and settings.
+ * @type {object}
+ * @property {object} pomoStats - The Pomodoro statistics.
+ * @property {function} setPomoStats - Function to update the Pomodoro statistics.
+ * @property {object} settings - The Pomodoro settings.
+ * @property {function} setSettings - Function to update the Pomodoro settings.
+ * @property {object} pomoStatsStateless - The Pomodoro statistics without state.
+ */
 const PomoContext = createContext();
 
+/**
+ * Provider component for managing Pomodoro statistics and settings.
+ * @param {object} props - The component props.
+ * @param {ReactNode} props.children - The child components.
+ * @returns {JSX.Element} The PomoProvider component.
+ */
 const PomoProvider = ({ children }) => {
   // Use state to manage pomoStats and settings
   const [pomoStats, setPomoStats] = useState(pomoStatsStateless);
