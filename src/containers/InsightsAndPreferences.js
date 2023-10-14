@@ -3,10 +3,16 @@ import { Link } from "react-router-dom";
 import close from "../assets/icons/close.png";
 import PomoStats from "../components/PomoStats";
 import { useState } from "react";
-
 import Settings from "../components/Settings";
 import timerImg from "../assets/icons/CompositeLayer.png";
 
+/**
+ * Functional component that renders a section with two tabs: 'Insights' and 'Preferences'.
+ * The active tab is controlled by the 'activeTab' state variable.
+ * Depending on the active tab, either the 'PomoStats' or 'Settings' component is rendered.
+ *
+ * @returns {JSX.Element} The rendered component.
+ */
 const InsightsAndPreferences = () => {
   const [activeTab, setActiveTab] = useState("progress");
   return (
