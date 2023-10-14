@@ -3,6 +3,18 @@ import playButtonIcon from "../assets/icons/play-button.png";
 import pauseButtonIcon from "../assets/icons/pause-button.png";
 import Menu from "./Menu";
 
+/**
+ * CountdownTimer component displays a countdown timer with play/pause functionality.
+ * It also includes a menu component for navigation and shows progress information.
+ *
+ * @param {Object} props - The component props.
+ * @param {Object} props.displayedTimer - An object containing the current timer state.
+ * @param {Object} props.pomoStats - An object containing statistics about completed rounds and sessions.
+ * @param {string} props.view - The current view of the timer.
+ * @param {Function} props.expiryTimestamp - A function that calculates the expiry timestamp based on the timer duration.
+ * @param {number} props.timerDuration - The duration of the timer in seconds.
+ * @returns {JSX.Element} - The rendered CountdownTimer component.
+ */
 const CountdownTimer = ({
   displayedTimer,
   pomoStats,
@@ -12,20 +24,24 @@ const CountdownTimer = ({
 }) => {
   const { seconds, minutes, isRunning, start, pause, restart } = displayedTimer;
 
-  // Define the message based on the timer state and view
-  const message =
-    isRunning && view === "focus"
-      ? "Focusing"
-      : isRunning && view === "break"
-      ? "Short Break Started"
-      : null;
+  /**
+   * Determines the message to display based on the timer state and view.
+   *
+   * @returns {string|null} - The message to display.
+   */
+  const getMessage = () => {
+    if (isRunning && view === "focus") {
+      return "Focusing";
+    } else if (isRunning && view === "break") {
+      return "Short Break Started";
+    } else {
+      return null;
+    }
+  };
 
-  const menuclass =
-    view === "focus"
-      ? "btn btn-primary drawer-button"
-      : "btn btn-secondary drawer-button";
-
-  // Pause the timer when the view changes (e.g., from focus to break) because react-timer-hook does not have a reset option but restart that runs automatcally
+  /**
+   * Pauses the timer when the view changes.
+   */
   useEffect(() => {
     pause();
   }, [view, pause]);
@@ -34,7 +50,7 @@ const CountdownTimer = ({
     <>
       {/* Header Section */}
       <Menu
-        menuclass={menuclass}
+        menuclass={view === "focus" ? "btn btn-primary drawer-button" : "btn btn-secondary drawer-button"}
         expiryTimestamp={expiryTimestamp}
         timerDuration={timerDuration}
         restart={restart}
@@ -55,7 +71,7 @@ const CountdownTimer = ({
         </div>
         <div className="h-10">
           {/* Display "Focusing" text while the timer is running */}
-          <p className="animate-pulse text-center">{message}</p>
+          <p className="animate-pulse text-center">{getMessage()}</p>
         </div>
         {/* Timer Control */}
         <div className="py-10 flex justify-center">
@@ -65,17 +81,13 @@ const CountdownTimer = ({
               <img
                 src={pauseButtonIcon}
                 alt="Pause Button"
-                onClick={() => {
-                  pause();
-                }}
+                onClick={pause}
               />
             ) : (
               <img
                 src={playButtonIcon}
                 alt="Play Button"
-                onClick={() => {
-                  start();
-                }}
+                onClick={start}
               />
             )}
           </button>
@@ -110,3 +122,5 @@ const CountdownTimer = ({
 };
 
 export default CountdownTimer;
+
+
