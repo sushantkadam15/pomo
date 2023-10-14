@@ -1,3 +1,8 @@
+/**
+ * The App component is the main component of the Pomo app. It renders different components based on the state of the app, including the PomoBrandHeader, Onboarding, and TimerControlPanel. It uses React Router to handle different routes and the PomoProvider to provide context to its child components.
+ *
+ * @returns {JSX.Element} The rendered component structure based on the state variables `pomoBrandHeaderDisplay` and `instructionsComplete`.
+ */
 import React, { useEffect, useState } from "react";
 import PomoBrandHeader from "../components/PomoBrandHeader";
 import Onboarding from "../components/Onboarding";
@@ -17,6 +22,11 @@ function App() {
     localStorage.setItem("instructionsComplete", instructionsComplete);
   }, [instructionsComplete]);
 
+  /**
+   * Determines which component to render based on the values of `pomoBrandHeaderDisplay` and `instructionsComplete`.
+   *
+   * @returns {JSX.Element} The component to render.
+   */
   const currentDisplayItem = () => {
     if (pomoBrandHeaderDisplay) {
       return (
@@ -37,6 +47,11 @@ function App() {
     }
   };
 
+  /**
+   * The Home component renders the result of the `currentDisplayItem` function.
+   *
+   * @returns {JSX.Element} The rendered component.
+   */
   const Home = () => (
     <main className="font-montserrat-regular my-0">{currentDisplayItem()}</main>
   );
