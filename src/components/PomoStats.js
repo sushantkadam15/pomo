@@ -3,21 +3,30 @@ import { useContext } from "react";
 import { GaugeCircle, Play, Pause, StopCircle, Rocket } from "lucide-react";
 import convertSeconds from "convert-seconds";
 
+/**
+ * A functional component that renders a statistics card with a description, an icon, a value, and a calculated time duration.
+ * It checks if the `stats` and `statsCalculationParam` props are valid numbers and handles the error if they are not.
+ *
+ * @param {Object} props - The props object.
+ * @param {string} props.statsDescription - The description of the statistics.
+ * @param {React.Component} props.statsIcon - The icon to be displayed.
+ * @param {number} props.stats - The value of the statistics.
+ * @param {number} props.statsCalculationParam - The parameter used to calculate the time duration.
+ * @returns {React.Component|null} The rendered statistics card component or null if there is an error.
+ */
 const StatsCard = ({
-  // Define it as a functional component with props
   statsDescription,
   statsIcon,
   stats,
   statsCalculationParam,
 }) => {
-  // Check if stats and statsCalculationParam are valid numbers
   if (typeof stats !== "number" || typeof statsCalculationParam !== "number") {
     console.error(
       "Invalid value sent to convert-seconds:",
-      stats, // undefined
-      statsCalculationParam // undefined
+      stats,
+      statsCalculationParam
     );
-    return null; // Return null or handle the error appropriately
+    return null;
   }
 
   return (
