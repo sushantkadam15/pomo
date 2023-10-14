@@ -7,6 +7,33 @@ import GoalCompletionCard from "../components/GoalCompletionCard";
 import bellSound from "../assets/sounds/bell.wav";
 
 
+/**
+ * TimerControlPanel is a functional component that controls the timer and session data for a Pomodoro timer application.
+ * It uses state variables and a custom hook to manage the view, break duration, and goal completion card display.
+ * It also handles session completion events and updates the session and break timers accordingly.
+ *
+ * Example Usage:
+ * <TimerControlPanel />
+ *
+ * Inputs:
+ * - No explicit inputs, but it relies on the 'PomoContext' context and the 'settings' object from the context to determine the timer durations and other settings.
+ *
+ * Flow:
+ * 1. The component initializes state variables for the view, break duration, and goal completion card display.
+ * 2. It creates session and break timers using the 'useTimer' custom hook, providing the expiry timestamp and an 'onExpire' callback function.
+ * 3. When a session or break timer expires, the 'handleSessionCompletion' function is called.
+ * 4. The 'handleSessionCompletion' function checks the current view and break duration to determine the appropriate action based on the Pomodoro technique rules.
+ * 5. It updates the session and break timers, changes the view, and updates the 'pomoStats' state variable accordingly.
+ * 6. If a goal is completed, it sets the 'displayGoalCompletionCard' state variable to true.
+ * 7. The component renders the 'FullScreenSection' component with the appropriate background color and text color based on the current view.
+ * 8. It conditionally renders the 'CountdownTimer' component based on the current view, passing the relevant timer and pomoStats data.
+ * 9. It also renders the 'GoalCompletionCard' component, passing the 'displayGoalCompletionCard' and 'setDisplayGoalCompletionCard' state variables.
+ *
+ * Outputs:
+ * - The component renders the 'FullScreenSection' component with the appropriate background color and text color.
+ * - It conditionally renders the 'CountdownTimer' component based on the current view, passing the relevant timer and pomoStats data.
+ * - It renders the 'GoalCompletionCard' component, passing the 'displayGoalCompletionCard' and 'setDisplayGoalCompletionCard' state variables.
+ */
 function TimerControlPanel() {
   // State variables for controlling the timer and session data
   const { pomoStats, setPomoStats, settings } = useContext(PomoContext);
