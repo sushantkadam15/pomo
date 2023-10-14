@@ -3,6 +3,21 @@ import { Pause, Play, StopCircle } from "lucide-react";
 import { PomoContext } from "../context/PomoContext";
 import convertSeconds from "convert-seconds";
 
+/**
+ * The `SettingCard` component renders a card with a title, an icon, a range input, and a duration display.
+ * It is used in the `Settings` component to display and update the user's preferences for the Pomodoro session, short break, and long break durations.
+ *
+ * @param {Object} props - The props object containing the following properties:
+ *   - title (string): The title of the setting card.
+ *   - currentDurationInSec (number): The current duration in seconds.
+ *   - icon (React element): The icon to display on the card.
+ *   - inputmin (number): The minimum value for the range input.
+ *   - inputmax (number): The maximum value for the range input.
+ *   - currentvalue (number): The current value of the range input.
+ *   - updatePreferences (function): A function to update the user's preferences.
+ *   - name (string): The name of the setting.
+ * @returns {JSX.Element} The rendered SettingCard component.
+ */
 const SettingCard = ({
   title,
   currentDurationInSec,
@@ -39,6 +54,11 @@ const SettingCard = ({
   );
 };
 
+/**
+ * The `Settings` component renders a collection of `SettingCard` components to display and update the user's preferences for the Pomodoro session, short break, and long break durations.
+ *
+ * @returns {JSX.Element} The rendered Settings component.
+ */
 const Settings = () => {
   const { settings, setSettings } = useContext(PomoContext);
   const {
@@ -47,6 +67,11 @@ const Settings = () => {
     longBreakDuration, // seconds
   } = settings;
 
+  /**
+   * Updates the user's preferences based on the input change event.
+   *
+   * @param {Object} e - The input change event object.
+   */
   const updatePreferences = (e) => {
     const { name, value } = e.target;
     if (value < 60) {
