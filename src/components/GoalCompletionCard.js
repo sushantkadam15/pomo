@@ -4,6 +4,12 @@ import { GaugeCircle, Rocket } from "lucide-react";
 import { PomoContext } from "../context/PomoContext";
 import confetti from "canvas-confetti";
 
+/**
+ * Renders a modal dialog with statistics about completed sessions and goals.
+ * @param {boolean} displayGoalCompletionCard - Indicates whether the goal completion card should be displayed.
+ * @param {function} setDisplayGoalCompletionCard - Callback function to update the value of displayGoalCompletionCard.
+ * @returns {JSX.Element} - Modal dialog component.
+ */
 const GoalCompletionCard = ({
   displayGoalCompletionCard,
   setDisplayGoalCompletionCard,
@@ -11,17 +17,16 @@ const GoalCompletionCard = ({
   const goalCompletionCardRef = useRef(null);
   const { settings, pomoStats } = useContext(PomoContext);
   const {
-    totalRoundsCompletedAllTime,
     totalSessionsCompletedAllTime,
+    totalRoundsCompletedAllTime,
     totalShortBreaksCompletedAllTime,
     totalLongBreaksCompletedAllTime,
     totalGoalsAchieved,
   } = pomoStats;
 
   useEffect(() => {
-    // Effect triggered when displayGoalCompletionCard prop changes
     if (displayGoalCompletionCard) {
-      goalCompletionCardRef.current.showModal(); // Show the modal when prop is true
+      goalCompletionCardRef.current.showModal();
       confetti({ particleCount: 500, startVelocity: 30, spread: 360 });
     }
   }, [displayGoalCompletionCard]);
@@ -51,7 +56,6 @@ const GoalCompletionCard = ({
           </p>
           <div className="modal-action">
             <form method="dialog">
-              {/* Button to close the modal */}
               <button
                 className="btn"
                 onClick={() => setDisplayGoalCompletionCard(false)}
