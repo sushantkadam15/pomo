@@ -4,6 +4,17 @@ import UnboxingDoodle from "../assets/images/UnboxingDoodle.gif";
 import ReadingDoodle from "../assets/images/ReadingDoodle.gif";
 import DancingDoodle from "../assets/images/DancingDoodle.gif";
 
+/**
+ * React functional component that renders a set of instructions with images and allows the user to navigate through them using buttons.
+ * It also includes a "Next" button that progresses to the next instruction and a "Finish" button that marks the instructions as complete.
+ *
+ * @param {boolean} instructionsComplete - A flag indicating whether the instructions have been completed.
+ * @param {function} setInstructionsComplete - A callback function to update the instructionsComplete flag.
+ *
+ * @returns {JSX.Element} - The component renders a set of instructions with images and buttons to navigate through them.
+ * It updates the instructionsComplete flag when the instructions are marked as complete.
+ */
+
 const Instructions = ({ instructionsComplete, setInstructionsComplete }) => {
   // Define an array of instructions with step, heading, text, image source, and alt text.
   const steps = [
@@ -38,10 +49,7 @@ const Instructions = ({ instructionsComplete, setInstructionsComplete }) => {
 
   // Function to handle opacity transitions for heading and description.
   const applyOpacityTransition = (isVisible) => {
-    instructionsContainerRef.current.classList.toggle(
-      "opacity-0",
-      !isVisible
-    );
+    instructionsContainerRef.current.classList.toggle("opacity-0", !isVisible);
   };
 
   // Effect to initiate an opacity text transition when the component mounts.
